@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              KC_APP,      KC_Y,   KC_U,   KC_I,   KC_O,    KC_P,             KC_BSLS,
                           KC_H,   KC_J,   KC_K,   KC_L,    KC_SCLN,          KC_QUOT,
              KC_RGUI,     KC_N,   KC_M,   KC_COMM,KC_DOT,  KC_SLSH,          KC_RSPC,
-                                  KC_SPC, KC_RBRC,MO(MDIA),KC_RBRC,          KC_RSFT,
+                                  KC_FN2, KC_RBRC,MO(MDIA),KC_RBRC,          KC_RSFT,
              KC_LALT,        KC_INS,
              KC_PGUP,
              KC_PGDN, KC_RALT,KC_ENT
@@ -180,8 +180,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
+enum function_id {
+    SHIFT_SPACE,
+};
+
 const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_TOGGLE(SYMB)                // FN1 - Momentary Layer 1 (Symbols)
+    [1] = ACTION_LAYER_TAP_TOGGLE(SYMB),                // FN1 - Momentary Layer 1 (Symbols)
+    [2] = ACTION_FUNCTION(SHIFT_SPACE),                 // FN2 - Send ") " if pressed with right shift
+};
+
+void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
+    static uint8_t right_shift_mask;
+    switch (id) {
+        case SHIFT_SPACE:
+            if (record->event.pressed) {
+                right_shift_mask = get_mods() & MOD_BIT(KC_RSFT);
+                if (!right_shift_mask)
+                    register_code(KC_SPC);
+            } else {
+                if (right_shift_mask) {
+                    register_mods(MOD_BIT(KC_LSFT));
+                    register_code(KC_RPRN);
+                    unregister_code(KC_RPRN);
+                    unregister_mods(MOD_BIT(KC_LSFT));
+                    register_code(KC_SPC);
+                }
+                unregister_code(KC_SPC);
+            }
+            break;
+    }
 };
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
