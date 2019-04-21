@@ -1,11 +1,16 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 
-// TODO: Define layer names that make sense for the ErgoDox EZ.
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
 #define MDIA 2 // media keys
 #define NUMK 3 // number pad
+
+enum custom_keycodes {
+    EPRM = SAFE_RANGE,
+    VRSN,
+    SSPC,
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -46,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              KC_APP,      KC_Y,   KC_U,   KC_I,          KC_O,    KC_P,             KC_BSLS,
                           KC_H,   KC_J,   KC_K,          KC_L,    KC_SCLN,          RCTL_T(KC_QUOT),
              KC_RGUI,     KC_N,   KC_M,   KC_COMM,       KC_DOT,  KC_SLSH,          KC_RSPC,
-                                  KC_FN2, GUI_T(KC_RBRC),MO(SYMB),KC_RBRC,          KC_RSFT,
+                                  SSPC,   GUI_T(KC_RBRC),MO(SYMB),KC_RBRC,          KC_RSFT,
              KC_LALT,        KC_INS,
              KC_PGUP,
              KC_PGDN, KC_RALT,KC_ENT
@@ -54,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 1: Symbol Layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
+ * |Version |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * |        |   !  |   @  |   {  |   }  |   |  |      |           |      |   Up |   7  |   8  |   9  |   *  |   F12  |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -75,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // SYMBOLS
 [SYMB] = LAYOUT_ergodox(
        // left hand
-       KC_TRNS,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
+       VRSN,   KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
        KC_TRNS,KC_EXLM,KC_AT,  KC_LCBR,KC_RCBR,KC_PIPE,KC_TRNS,
        KC_TRNS,KC_HASH,KC_DLR, KC_LPRN,KC_RPRN,KC_GRV,
        KC_TRNS,KC_PERC,KC_CIRC,KC_LBRC,KC_RBRC,KC_TILD,KC_TRNS,
@@ -178,19 +183,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-enum function_id {
-    SHIFT_SPACE,
-};
-
-const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_TOGGLE(SYMB),                // FN1 - Momentary Layer 1 (Symbols)
-    [2] = ACTION_FUNCTION(SHIFT_SPACE),                 // FN2 - Send ") " if pressed with right shift
-};
-
-void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t right_shift_mask;
-    switch (id) {
-        case SHIFT_SPACE:
+
+    switch (keycode) {
+        case SSPC:
             if (record->event.pressed) {
                 right_shift_mask = get_mods() & MOD_BIT(KC_RSFT);
                 if (!right_shift_mask)
@@ -205,22 +202,22 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
                 }
                 unregister_code(KC_SPC);
             }
-            break;
+            return false;
     }
-};
 
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:
-        if (record->event.pressed) {
-          SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
+    if (record->event.pressed) {
+        switch (keycode) {
+            case EPRM:
+                eeconfig_init();
+                return false;
+            case VRSN:
+                SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
+                return false;
         }
-        break;
-      }
-    return MACRO_NONE;
-};
+    }
+
+    return true;
+}
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
@@ -241,7 +238,6 @@ void matrix_scan_user(void) {
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
     switch (layer) {
-      // TODO: Make this relevant to the ErgoDox EZ.
         case 1:
             ergodox_right_led_1_on();
             break;
