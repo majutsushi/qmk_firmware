@@ -7,21 +7,21 @@
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
 #define MDIA 2 // media keys
-#define IDEA 3 // intellij idea
+#define NUMK 3 // number pad
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  |  L1  |           |  L1  |   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   =    |   1  |   2  |   3  |   4  |   5  |  L1  |           | NUMK |   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Tab    |   Q  |   W  |   E  |   R  |   T  | IDEA |           | App  |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  | App  |           | App  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | Esc/Ctl|   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |  '/Ctl |
  * |--------+------+------+------+------+------| Grv  |           | RGui |------+------+------+------+------+--------|
  * | Shift/(|   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | Shift/)|
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | Shift|  '"  |  L2  | [/Gui|Sp/Alt|                                       | Space| ]/Gui|  L2  |   ]  | Shift|
+ *   | Shift|  '"  |  L1  | [/Gui|Sp/Alt|                                       | Space| ]/Gui|  L1  |   ]  | Shift|
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,---------------.
  *                                        | Del  | LGui |       | Alt  |  Ins   |
@@ -36,19 +36,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
         KC_EQL,         KC_1,         KC_2,     KC_3,   KC_4,   KC_5,   TG(SYMB),
-        KC_TAB,         KC_Q,         KC_W,     KC_E,   KC_R,   KC_T,   MO(IDEA),
+        KC_TAB,         KC_Q,         KC_W,     KC_E,   KC_R,   KC_T,   KC_APP,
         CTL_T(KC_ESC),  KC_A,         KC_S,     KC_D,   KC_F,   KC_G,
         KC_LSPO,        KC_Z,         KC_X,     KC_C,   KC_V,   KC_B,   KC_GRV,
-        KC_LSFT,        KC_QUOT,      MO(MDIA), GUI_T(KC_LBRC), ALT_T(KC_SPC),
+        KC_LSFT,        KC_QUOT,      MO(SYMB), GUI_T(KC_LBRC), ALT_T(KC_SPC),
                                                KC_DELT,  KC_LGUI,
                                                               KC_HOME,
                                                MO(MDIA),KC_BSPC,KC_END,
         // right hand
-             TG(SYMB),    KC_6,   KC_7,   KC_8,          KC_9,    KC_0,             KC_MINS,
+             TG(NUMK),    KC_6,   KC_7,   KC_8,          KC_9,    KC_0,             KC_MINS,
              KC_APP,      KC_Y,   KC_U,   KC_I,          KC_O,    KC_P,             KC_BSLS,
                           KC_H,   KC_J,   KC_K,          KC_L,    KC_SCLN,          CTL_T(KC_QUOT),
              KC_RGUI,     KC_N,   KC_M,   KC_COMM,       KC_DOT,  KC_SLSH,          KC_RSPC,
-                                  KC_FN2, GUI_T(KC_RBRC),MO(MDIA),KC_RBRC,          KC_RSFT,
+                                  KC_FN2, GUI_T(KC_RBRC),MO(SYMB),KC_RBRC,          KC_RSFT,
              KC_LALT,        KC_INS,
              KC_PGUP,
              KC_PGDN, KC_RALT,KC_ENT
@@ -136,18 +136,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_MPRV,
        KC_MNXT, KC_MUTE, KC_MPLY
 ),
-/* Keymap 3: IntelliJ IDEA layer
+/* Keymap 3: Numberic keypad
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |Alt-F1|Alt-F2|Alt-F3|Alt-F4|Alt-F5|      |           |      |Alt-F6|Alt-F7|Alt-F8|Alt-F9|AltF10|Alt-F11 |
+ * |        |      |      |      |      |      |      |           |      |      | NumL |   /  |   *  |   -  |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |   !  |   @  |   {  |   }  |   |  |      |           |      |   Up |   7  |   8  |   9  |MEH(Q)|Alt-F12 |
+ * |        |      |      |      |      |      |      |           |      |      |   7  |   8  |   9  |   +  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |   #  |   $  |   (  |   )  |   `  |------|           |------|A-Left|A-Down| A-Up |A-Righ|   +  |        |
+ * |        |      |      |      |      |      |------|           |------|      |   4  |   5  |   6  |   +  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |MEH(R)|   1  |   2  |   3  |   \  |        |
+ * |        |      |      |      |      |      |      |           |      |      |   1  |   2  |   3  | Enter|        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      |      |      |                                       |      |    . |   0  |   =  |      |
+ *   |      |      |      |      |      |                                       |   0  |   0  |   .  | Enter|      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       |      |      |
@@ -157,23 +157,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 |      |      |      |       |      |      |      |
  *                                 `--------------------'       `--------------------'
  */
-// IDEA
-[IDEA] = KEYMAP(
+// NUMK
+[NUMK] = KEYMAP(
        // left hand
-       KC_TRNS, LALT(KC_F1), LALT(KC_F2), LALT(KC_F3), LALT(KC_F4), LALT(KC_F5), LALT(KC_TRNS),
-       KC_TRNS, KC_EXLM,     KC_AT,       KC_LCBR,     KC_RCBR,     KC_PIPE,     KC_TRNS,
-       KC_TRNS, KC_HASH,     KC_DLR,      KC_LPRN,     KC_RPRN,     KC_GRV,
-       KC_TRNS, KC_PERC,     KC_CIRC,     KC_LBRC,     KC_RBRC,     KC_TILD,     KC_TRNS,
+       KC_TRNS, KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,
+       KC_TRNS, KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,
+       KC_TRNS, KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,
+       KC_TRNS, KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,
        KC_TRNS, KC_TRNS,     KC_TRNS,     KC_TRNS,     KC_TRNS,
                                                                     KC_TRNS,     KC_TRNS,
                                                                                  KC_TRNS,
                                                        KC_TRNS,     KC_TRNS,     KC_TRNS,
        // right hand
-       KC_TRNS, LALT(KC_F6),   LALT(KC_F7),   LALT(KC_F8), LALT(KC_F9),    LALT(KC_F10), LALT(KC_F11),
-       KC_TRNS, KC_UP,         KC_7,          KC_8,        KC_9,           MEH(KC_Q),    LALT(KC_F12),
-                LALT(KC_LEFT), LALT(KC_DOWN), LALT(KC_UP), LALT(KC_RIGHT), KC_PLUS,      KC_TRNS,
-       KC_TRNS, MEH(KC_R),     KC_1,          KC_2,        KC_3,           KC_BSLS,      KC_TRNS,
-                               KC_TRNS,       KC_DOT,      KC_0,           KC_EQL,       KC_TRNS,
+       KC_TRNS, KC_TRNS,       KC_NUMLOCK,    KC_KP_SLASH, KC_KP_ASTERISK, KC_KP_MINUS,  KC_TRNS,
+       KC_TRNS, KC_TRNS,       KC_KP_7,       KC_KP_8,     KC_KP_9,        KC_KP_PLUS,   KC_TRNS,
+                KC_TRNS,       KC_KP_4,       KC_KP_5,     KC_KP_6,        KC_KP_PLUS,   KC_TRNS,
+       KC_TRNS, KC_TRNS,       KC_KP_1,       KC_KP_2,     KC_KP_3,        KC_KP_ENTER,  KC_TRNS,
+                               KC_KP_0,       KC_KP_0,     KC_KP_DOT,      KC_KP_ENTER,  KC_TRNS,
        KC_TRNS, KC_TRNS,
        KC_TRNS,
        KC_TRNS, KC_TRNS,       KC_TRNS
@@ -226,7 +226,11 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
-
+    // If numlock is not on, press the button to turn it on
+    if (!(host_keyboard_leds() & (1 << USB_LED_NUM_LOCK))) {
+        register_code(KC_NUMLOCK);
+        unregister_code(KC_NUMLOCK);
+    }
 };
 
 // Runs constantly in the background, in a loop.
@@ -254,3 +258,11 @@ void matrix_scan_user(void) {
     }
 
 };
+
+// Force num lock to always be on
+/* void led_set_keymap(uint8_t usb_led) { */
+/*     if (!(usb_led & (1 << USB_LED_NUM_LOCK))) { */
+/*         register_code(KC_NUMLOCK); */
+/*         unregister_code(KC_NUMLOCK); */
+/*     } */
+/* } */
